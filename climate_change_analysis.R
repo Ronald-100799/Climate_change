@@ -6,9 +6,9 @@ library(dplyr)
 ## reading the data
 climate_change <- read.csv("D:/datasets/Time Series/climate_change.csv")
 View(climate_change)
-## checkung the names of each column
+## checking the names of each column
 names(climate_change)
-## attching the column names for further convenience
+## attaching the column names for further convenience
 attach(climate_change)
 ## descriptive stats of each column
 summary(climate_change)
@@ -16,9 +16,11 @@ str(climate_change)
 ## checking the shape of the data
 dim(climate_change)
 
+## Data Cleaning
 # Missing value of all the column
 sapply(climate_change, function(x) sum(is.na(x)))
 
+## Basic EDA
 # 1.checking through which years is the data recorded
 min(Year)
 max(Year)
@@ -63,7 +65,21 @@ ggplot(climate_change, aes(Year,Temp)) +
   stat_smooth(aes(y=Temp, x=Year), method = lm, formula = y ~ poly(x, 10), se = FALSE,color='red')
 
 ## 4.checking correlation between each variable:
-cor(climate_change)
+corr(climate_change)
 
 
-    
+## Data Transformation
+## 5. Checking the distribution of data in each variable, any skewness if encountered in any variable can be transformed into normal distribution to retain consistency
+
+hist(CO2, col='steelblue', main='Original_CO2')
+hist(CH4, col='steelblue', main='Original_CH4') #skewed
+hist(N2O, col='steelblue', main='Original_N20')
+hist(TSI, col='steelblue', main='Original_TSI') #skewed
+hist(MEI, col='steelblue', main='Original_MEI')
+hist(Aerosols, col='steelblue', main='Original_Aerosols') # ultra skewed
+hist(Temp, col='steelblue', main='Original_Temp')
+
+## We can use log transformation to transform the skewed data:
+# transformed Aerosols:
+climate_change$log_Aer<-log(Aerosols)
+hist(climate_change$log_Aer, color='green', main="transformed_Aerosols") #not bad
